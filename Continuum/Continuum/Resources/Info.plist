@@ -60,5 +60,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>I need yo photos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Im going to spy on you and report you to the NSA</string>
 </dict>
 </plist>

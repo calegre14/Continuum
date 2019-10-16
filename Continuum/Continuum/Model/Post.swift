@@ -15,6 +15,7 @@ class Post {
     var timestamp: Date
     var caption: String
     var comments: [Comment]
+    
     var photo: UIImage? {
         get {
             guard let photoData = photoData else {return nil}
@@ -34,6 +35,7 @@ class Post {
 }
 
 class Comment {
+    
     var text: String
     let timestamp: Date
     weak var post: Post?
@@ -44,4 +46,23 @@ class Comment {
         self.post = post
     }
 }
+extension Post: SearchRecord {
+    func matches(searchTerm: String) -> Bool {
+        if caption.contains(searchTerm) {
+            return true
+        } else {
+            for comment in comments {
+                if comment.matches(searchTerm: searchTerm) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
 
+extension Comment: SearchRecord {
+    func matches(searchTerm: String) -> Bool {
+        return text.contains(searchTerm)
+    }
+}

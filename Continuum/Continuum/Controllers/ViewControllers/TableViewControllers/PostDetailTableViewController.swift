@@ -12,13 +12,15 @@ class PostDetailTableViewController: UITableViewController {
     
     var post: Post? {
         didSet {
+            loadViewIfNeeded()
             updateViews()
         }
     }
     
-    
+    //MARK:- Properties
     @IBOutlet weak var photoImageView: UIImageView!
     
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -45,22 +47,22 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     @IBAction func shareButtonTapped(_ sender: UIButton) {
+        guard let captions = post?.caption else { return }
+        let shareSheet = UIActivityViewController(activityItems: [captions], applicationActivities: nil)
+        present(shareSheet, animated: true, completion: nil)
     }
     @IBAction func followPostButtonTapped(_ sender: UIButton) {
     }
     
     
     func updateViews() {
-        DispatchQueue.main.async {
-            self.photoImageView.image = self.post?.photo
-            self.tableView.reloadData()
+        photoImageView.image = post?.photo
+        tableView.reloadData()
         }
-    }
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let post = post else {return 0}
-        return post.comments.count
+        return post?.comments.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

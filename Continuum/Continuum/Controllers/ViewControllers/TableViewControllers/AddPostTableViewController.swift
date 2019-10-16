@@ -8,36 +8,45 @@
 
 import UIKit
 
-class AddPostTableViewController: UITableViewController {
+class AddPostTableViewController: UITableViewController, PhotoSelectorViewControllerDelegate {
+    
+    //MARK:- Outlets
+    @IBOutlet weak var captionTextField: UITextField!
     
     var selectedImage: UIImage?
     
-    @IBOutlet weak var selectImageButton: UIButton!
-    @IBOutlet weak var captionTextField: UITextField!
-    
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    //MARK:-Life Cycle
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        captionTextField.text = ""
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        captionTextField.text = nil
-    }
-
-    @IBAction func selectImageButtonTapped(_ sender: UIButton) {
+        captionTextField.text = ""
     }
     
+    func photoSelectorViewControllerSelected(image: UIImage) {
+        selectedImage = image
+    }
+    
+    //MARK:- Actions
     @IBAction func addPostButtonTapped(_ sender: UIButton) {
         guard let image = selectedImage,
             let caption = captionTextField.text, !caption.isEmpty else {return}
         PostController.shared.createPostWith(image: image, caption: caption) { (_) in
         }
         self.tabBarController?.selectedIndex = 0
-        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func cancelBarButtonTapped(_ sender: UIBarButtonItem) {
         self.tabBarController?.selectedIndex = 0
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toPhotoSelectorVC" {
+            let photoSelector = segue.destination as? photoSelectorViewController
+            photoSelector?.delegate = self
+        }
     }
 }
